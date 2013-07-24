@@ -5,6 +5,8 @@ $(function() {
 		
 	SC.initialize({
 		client_id: "af032ce963c757ca0407ef20b88503bb",
+		usePeakData: false,     
+        useWaveformData: false,
 	});
 
 	var playSong = function(songid) {	
@@ -13,19 +15,33 @@ $(function() {
 			
 		$.get('http://api.soundcloud.com/tracks/' + songid + '.json?client_id=af032ce963c757ca0407ef20b88503bb', function(data) {
 			var bpm = data.bpm;
-			var factor = bpm /50;
+			var factor = (bpm * bpm) /5000;
 			_demo.setAnimate(true, factor);
 		});
 			
-		SC.stream("/tracks/" + songid, function(sound){			
-			activeSong = sound;
+		/*SC.stream("/tracks/" + songid, function(sound){		
+			
+			activeSong = sound;			
 			activeSong.play();
-			//_demo.setAnimate(true);
+		});*/
+		SC.stream("/tracks/" + songid,{
+		  usePeakData: true,     
+		  useWaveformData: true,
+		  autoPlay: false,	  	
+		  whileplaying : function() {
+				console.log('Peaks, L/R: '+this.peakData.left+'/'+this.peakData.right);
+				var amp = (this.peakData.left+ this.peakData.right) / 2;
+				_demo.setBeatAmplitude(amp);
+			}		
+		}, function(sound){
+			activeSong = sound;			
+			activeSong.play();
 		});
 	}
 	
+		
 	var stopSongs = function(){
-	    //_demo.setAnimate(false);
+	    _demo.setAnimate(false);
 		if(activeSong){
 			activeSong.stop();
 			activeSong = undefined;
@@ -34,9 +50,8 @@ $(function() {
 	
 	$("#startSong1").click(function () {playSong(293)});
 	$("#startSong2").click(function () {playSong(14044361)});
-	$("#startSong3").click(function () {playSong(55997608)});
 	$("#stop").click(function () {stopSongs()});
-	
+
 	var getDemoContext = function () {
     var demoCtx,
         canvaName = "c01";

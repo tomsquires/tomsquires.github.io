@@ -38,15 +38,25 @@ var JuliaGLDrawer = function (id){
         _palette          = new Palette(),
         _c                = new Complex(-0.85, 0.2),
         _previousConstant = new Complex(1, 1),
-		_factor = 1;
+		_factor = 1,
+		_beatAmplitude = 1;
+
 
     this.getConstant = function (){
         return _c;
     };
-
+	
     this.setConstant = function (a, b){
         _c.a = a;
         _c.b = b;
+    };
+	
+	
+    this.setBeatAmplitude = function (amp){
+	
+		if(amp < 2 || amp > 0.8){
+		_beatAmplitude = amp;
+		}
     };
 
     // Set palette colours
@@ -77,8 +87,8 @@ var JuliaGLDrawer = function (id){
         _animateFlag = false;
 
     this.animate = function(){
-        _degA += _factor/100;
-        _degB += _factor/1000;
+        _degA =  3.14 * _beatAmplitude;
+        _degB += 1/1000;
         _me.setConstant(Math.cos(_degA), Math.sin(_degB));
     }
     

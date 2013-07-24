@@ -37,7 +37,8 @@ var JuliaDrawer = function (id){
         _iteration        = _maxIter,
         _palette          = new Palette(),
         _c                = new Complex(-0.85, 0.2),
-        _previousConstant = new Complex(1, 1);
+        _previousConstant = new Complex(1, 1),
+		_amplitude = 0;
 
     this.getConstant = function (){
         return _c;
@@ -47,6 +48,10 @@ var JuliaDrawer = function (id){
         _c.a = a;
         _c.b = b;
     };
+	
+	this.setAmplitude = function(amplitude){
+	_amplitude = amplitude;
+	}
 
     var convertCoordinateToComplex = function (c, i, j){
         // (a + ib)
