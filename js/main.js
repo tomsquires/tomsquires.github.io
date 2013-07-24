@@ -51,6 +51,23 @@ $(function() {
 	$("#startSong1").click(function () {playSong(293)});
 	$("#startSong2").click(function () {playSong(14044361)});
 	$("#stop").click(function () {stopSongs()});
+	
+	$("#btnsearch").click(function () {
+		var search = $('#search').val();
+		SC.get('/tracks', {q: search,  bpm: { from: 1 } }, function(tracks) {
+		  $("#searchResults").empty();
+		  
+		jQuery.each(tracks, function(index, item) {
+			var el = $("#searchResults")
+			.append('<li class=\'listitems\' id=\'' + item.id +'\' >' + item.title+ '</li>');
+		});
+		
+		$('.listitems').on('click',function(el){playSong(el.target.id)});
+		  
+		  console.log(tracks);
+		});
+	});
+
 
 	var getDemoContext = function () {
     var demoCtx,
